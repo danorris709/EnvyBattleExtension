@@ -21,7 +21,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import uk.co.envyware.battle.extension.EnvyBattleExtension;
 
 import java.text.DecimalFormat;
 
@@ -46,11 +48,16 @@ public abstract class MixinOpponentElement extends PixelmonWidget {
 
     @Shadow @Final private static ResourceLocation SHINY;
 
+    /**
+     * @author
+     * @reason
+     */
+    @Overwrite
     public void drawElement(MatrixStack matrix, float scale) {
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(770, 771);
         ScreenHelper.drawImage(matrix, OPPONENT, this.x, (this.y - 3), 160.0F, 50.0F, this.zLevel);
-        float healthPercent = (float)(this.enemy.health.get() / (double)this.enemy.maxHealth);
+        float healthPercent = (float)(this.enemy.health.get() / this.enemy.maxHealth);
         ScreenHelper.drawBar(matrix, this.x + 44, (this.y + 20), 109.0F, 10.0F, healthPercent, this.enemy.getHealthColor());
         ScreenHelper.drawImage(healthPercent <= 0.5F ? (healthPercent <= 0.25F ? WARNING : CAUTION) : HEALTHY, matrix, (this.x - 10), (this.y - 18), 60.0F, 60.0F, this.zLevel);
         ScreenHelper.drawImage(ScreenHelper.getPokemonSprite(this.enemy, this.parent.getMinecraft()), matrix, (this.x + 1), (this.y - 3), 40.0F, 40.0F, this.zLevel);
@@ -66,6 +73,14 @@ public abstract class MixinOpponentElement extends PixelmonWidget {
         if (form.getAbilities().isHiddenAbility(enemy.moveset.getAbility())) {
             ScreenHelper.drawImage(matrix, Resources.exclamation_mark, (this.x + 52) + offset, (this.y + 5), 5.0F, 8.0F, this.zLevel);
             offset += 7.0F;
+        }
+
+        double mouseX = Minecraft.getInstance().mouseHandler.xpos();
+        double mouseY = Minecraft.getInstance().mouseHandler.ypos();
+        EnvyBattleExtension.LOGGER.info("Mouse X: " + mouseX + " Mouse Y: " + mouseY + " " + this.isMouseOver(mouseX, mouseY));
+
+        if (isMouseOver(mouseX, mouseY)) {
+
         }
 
         if (this.enemy.getGender() != Gender.NONE) {

@@ -191,7 +191,3 @@ jar {
             'MixinConfigs' : "mixins.envybattleextension.json"
     )
 }
-
-jar.finalizedBy('shadowJar')
-shadowJar.finalizedBy('reobfJar')
-build.finalizedBy('versionedRelease')
