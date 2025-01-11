@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8.2",
+  "package": "uk.co.envyware.battle.extension.mixin",
+  "refmap": "mixins.envybattleextension.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "MixinOpponentElement"
+  ]
+}

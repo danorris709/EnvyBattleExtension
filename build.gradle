@@ -1,6 +1,7 @@
 plugins {
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
 }
 
 version = mod_version
@@ -10,7 +11,7 @@ base {
     archivesName = mod_id
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
@@ -171,6 +172,24 @@ javadoc {
     options {
         links 'https://reforged.gg/docs/1201/'
     }
+}
+
+sourceSets {
+    main {
+        ext.refMap = "mixins.envybattleextension.refmap.json"
+    }
+}
+
+mixin {
+    add sourceSets.main, "mixins.envybattleextension.refmap.json"
+}
+
+jar {
+    manifest.attributes(
+            'TweakClass': 'org.spongepowered.asm.launch.MixinTweaker',
+            'TweakOrder': 0,
+            'MixinConfigs' : "mixins.envybattleextension.json"
+    )
 }
 
 jar.finalizedBy('shadowJar')
